@@ -15,7 +15,7 @@ app.use(expess.json()) // thay cho bodyParser giúp express đọc hiểu req bo
 
 
 //public routes
-app.use('api/auth', authRoute)
+app.use('/api/auth', authRoute)
 
 //private routes
 
