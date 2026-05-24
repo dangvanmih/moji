@@ -7,6 +7,7 @@ create folder backend và front end
 1. tại folder backend:
 
    1. install các thư viện và khởi tạo nodemodule:
+
       1. npm init -y: khởi tạo nodemodule
       2. npm i express cors mongooes dotenv
       3. npm i nodemon -D
@@ -15,9 +16,11 @@ create folder backend và front end
    4. khởi tạo file .gitignore
    5. khởi tạo file .env: và khai báo các Key value
    6. trong file package.json:
+
       1. thêm "dev": "nodemon src/server.js", "start": "node src/server.js" trong script
       2. thêm type: "module" bên dưới script
    7. trong file server.js:
+
       1. cấu hình app:
          ```
          import expess from "express";
@@ -42,6 +45,7 @@ create folder backend và front end
 
          ```
    8. trong folder libs:
+
       1. Tạo file db.js:
          1. khởi tạo kết nối db:
             ```
@@ -55,8 +59,7 @@ create folder backend và front end
               }
             }
             ```
-
-    9. khởi tạo usermodel:
+   9. khởi tạo usermodel:
 
 ```
 import mongoose from "mongoose";
@@ -110,10 +113,6 @@ const User = mongoose.model("User", userSchema, user)
 
 ```
 
-
-
-
-
 10. khởi tạo file authRoute trong folder Routes:
 
 ```
@@ -141,3 +140,18 @@ app.use('api/auth', authRoute)
     1. jsonwebtoken: để khởi tạo và xác thực token
     2. bcrypt: mã hóa mật khẩu
     3. cookie-parser: đọc cookie từ request
+
+
+12. các thư viện bên front end:
+    1. khởi tạo bằng vite: npm create vite@latest .
+    2. chọn react và typesrcipt
+    3. install các thư viện: npm i
+       1. react-router: chuyển hướng các trang
+       2. axios: lấy api
+       3. lucide-react: icon react
+       4. tailwindcss @tailwindcss/vite tailwindcss-animate
+       5. zustand: quản lý state
+       6. zod: kiểm tra kiểu dữ liệu khi điền form
+       7. react-hook-form @hookform/resolvers: làm việc với form
+       8. sonner: hiển thị  thông báo
+       9. npm i -D @types/node: để type hiểu được kiểu dữ liệu của node js
