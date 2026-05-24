@@ -18,10 +18,10 @@ export const signUp = async (req, res) => {
 
 
     // kiểm tra user tồn tại chưa
-    const duplicate = await User.findOne({username});
+    const duplicate = await User.findOne({ username });
 
-    if(duplicate) {
-      return res.status(409).json({message: "user đã tồn tại"});
+    if (duplicate) {
+      return res.status(409).json({ message: "user đã tồn tại" });
     };
 
     // mã hóa password
@@ -41,34 +41,34 @@ export const signUp = async (req, res) => {
     return res.sendStatus(204)
   } catch (error) {
     console.error("Lỗi khi gọi singUp", error);
-    return res.status(500).json({message: "Lỗi hệ thống"});
+    return res.status(500).json({ message: "Lỗi hệ thống" });
   }
 }
 
-export const SignIn = async (req, res) => {
+export const signIn = async (req, res) => {
   try {
     // lấy inputs
-    const {username, password} = req.body;
-    if(!username || !password) {
-      return res.status(400).json({message: "Vui lòng nhập username và password"});
+    const { username, password } = req.body;
+    if (!username || !password) {
+      return res.status(400).json({ message: "Vui lòng nhập username và password" });
     }
 
     // kiểm tra tồn tại user
-    const user = await User.findOne({username})
+    const user = await User.findOne({ username })
 
-    if(!user) {
-      return res.status(401).json({message: "username hoặc password không chính xác"});
+    if (!user) {
+      return res.status(401).json({ message: "username hoặc password không chính xác" });
     }
 
     //kiểm tra password
     const passwordCorrect = await bcrypt.compare(password, user.hashPassword);
 
-    if(!passwordCorrect){
-      return res.status(401).json({message: "username hoặc password không chính xác"});
+    if (!passwordCorrect) {
+      return res.status(401).json({ message: "username hoặc password không chính xác" });
     }
 
     // nếu khớp, tạo accessToken với JWT
-    const accessToken = jwt.sign({userId: user.id}, process.env.ACCESS_TOKEN_SECRET, {expiresIn: ACCESS_TOKEN_TTL});
+    const accessToken = jwt.sign({ userId: user._id }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: ACCESS_TOKEN_TTL });
 
     // tạo refress token
     const refreshToken = crypto.randomBytes(64).toString("hex")
@@ -89,9 +89,29 @@ export const SignIn = async (req, res) => {
     })
 
     // trả access token về trong res
-    return res.status(200).json({message: `User ${user.displayName} đã logged in!`}, accessToken)
+    return res.status(200).json({ message: `User ${user.displayName} đã logged in!`, accessToken })
   } catch (error) {
     console.error("Lỗi khi gọi signIn", error);
-    return res.status(500).json({message: "Lỗi hệ thống"})
+    return res.status(500).json({ message: "Lỗi hệ thống" })
+  }
+}
+
+export const signOut = async (req, res) => {
+  try {
+
+    // Lấy refresh token từ cookie
+    const token = req.cookies?.refreshToken
+
+    if (token) {
+      // Xóa refresh token trong Session
+      await Session.deleteOne({refreshToken: token})
+
+      // Xóa cookie
+      res.clearCookie("refreshToken")
+    }
+    return res.sendStatus(204);
+  } catch (error) {
+    console.error("Lỗi khi gọi signOut", error);
+    return res.status(500).json({ message: "Lỗi hệ thống" })
   }
 }
